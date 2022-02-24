@@ -1,0 +1,36 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "author": "431000473 <2546728434@qq.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/koa": "^2.13.4",
+    "@types/koa-router": "^7.4.4",
+    "@types/mysql": "^2.15.21",
+    "@types/node": "^17.0.21",
+    "@typescript-eslint/eslint-plugin": "^5.12.1",
+    "@typescript-eslint/parser": "^5.12.1",
+    "eslint": "^8.9.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.4.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-vue": "^8.5.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.5.1",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.5.5"
+  },
+  "scripts": {
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "resetFolder": "rimraf dist/*",
+    "compile": "tsc",
+    "build": "npm-run-all resetFolder compile",
+    "start": "node ."
+  },
+  "dependencies": {
+    "koa": "^2.13.4",
+    "koa-router": "^10.1.1",
+    "mysql": "^2.18.1"
+  }
+}
