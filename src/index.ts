@@ -1,8 +1,10 @@
-const Koa = require("koa"); // 导入koa
-const Router = require("koa-router"); //导入koa-router
-const mysql = require("mysql"); // 导入mysql，连接mysql 需要用到
+import Cors from "cors";
+import Koa from "koa"; // 导入koa
+import Router from "koa-router"; //导入koa-router
+import mysql from "mysql"; // 导入mysql，连接mysql 需要用到
 const app = new Koa(); // 实例化koa
 const router = new Router(); // 实例化路由;
+const cors: any = Cors();
 
 // mysqljs 连接 mysql数据库
 let connection = mysql.createConnection({
@@ -45,51 +47,39 @@ router.get("/userAll", async (ctx: { redirect: any; body: unknown }) => {
   ctx.body = await resDb("SELECT * FROM user");
 });
 //请求 /addUser 接受前端传过来的数据，并且把数据持久化到数据库中
-router.get(
-  "/addUser",
-  async (ctx: { query: { name: string; age: string }; redirect: any }) => {
-    const { name, age } = ctx.query;
-    // 判断 name 和 age是否有值，都有值时，数据存入数据库，刷新表格页面
-    // 否则直接返回到表格页面
-    if (name && age) {
-      await resDb("INSERT INTO user values(null,?,?)", [name, age]);
-    }
-    //重定向路由，到 userAll
-    ctx.redirect("/userAll");
+router.get("/addUser", async (ctx: any) => {
+  const { name, age } = ctx.query;
+  // 判断 name 和 age是否有值，都有值时，数据存入数据库，刷新表格页面
+  // 否则直接返回到表格页面
+  if (name && age) {
+    await resDb("INSERT INTO user values(null,?,?)", [name, age]);
   }
-);
+  //重定向路由，到 userAll
+  ctx.redirect("/userAll");
+});
 //请求 /updateUser 接受前端传过来的数据，并且把数据持久化到数据库中
-router.get(
-  "/updateUser",
-  async (ctx: {
-    query: { id: number; name: string; age: number };
-    redirect: (arg0: string) => void;
-  }) => {
-    const { id, name, age } = ctx.query;
-    // 判断 id, name 和 age是否有值，都有值时，更新数据库中的数据，刷新表格页面
-    // 否则直接返回到表格页面
-    if (id && name && age) {
-      await resDb("UPDATE user SET name=?, age=? WHERE id=?", [name, age, id]);
-    }
-    //重定向路由，到 userAll
-    ctx.redirect("/userAll");
+router.get("/updateUser", async (ctx: any) => {
+  const { id, name, age } = ctx.query;
+  // 判断 id, name 和 age是否有值，都有值时，更新数据库中的数据，刷新表格页面
+  // 否则直接返回到表格页面
+  if (id && name && age) {
+    await resDb("UPDATE user SET name=?, age=? WHERE id=?", [name, age, id]);
   }
-);
+  //重定向路由，到 userAll
+  ctx.redirect("/userAll");
+});
 
 //请求/delete/:id  接受前端传过来的数据，并且把对应的id的数据删掉
-router.get(
-  "/delete/:id",
-  async (ctx: { params: { id: number }; redirect: (arg0: string) => void }) => {
-    const { id } = ctx.params;
-    // 判断 id否有值，有值时，根据id删除数据库中的数据，刷新表格页面
-    // 否则直接返回到表格页面
-    if (id) {
-      await resDb("DELETE FROM user WHERE id=?", [id]);
-    }
-    //重定向路由，到 userAll
-    ctx.redirect("/userAll");
+router.get("/delete/:id", async (ctx: any) => {
+  const { id } = ctx.params;
+  // 判断 id否有值，有值时，根据id删除数据库中的数据，刷新表格页面
+  // 否则直接返回到表格页面
+  if (id) {
+    await resDb("DELETE FROM user WHERE id=?", [id]);
   }
-);
+  //重定向路由，到 userAll
+  ctx.redirect("/userAll");
+});
 
 // 创建一个路径为/hello的get请求
 // router.get("/hello", async (ctx: { body: string; }) => {
@@ -101,6 +91,7 @@ router.get(
 app
   .use(router.routes())
   .use(router.allowedMethods())
+  .use(cors)
   // 监听端口
   .listen(7000, () => {
     console.log("server running port:" + 7000);

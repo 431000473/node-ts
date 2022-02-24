@@ -331,3 +331,12 @@ yarn add koa koa-router mysql @types/koa @types/kokoa-routera @types/mysql
       (null, "王五", 25),
       (null, "赵六", 26);
 ```
+
+跨域
+
+```ts
+//yarn add cors
+//yarn add @types/cors
+const cors = require("cors");
+app.use(cors());
+```
